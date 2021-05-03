@@ -13,12 +13,12 @@ func RegexSplitWords() *regexp.Regexp {
 
 // RegexSplitSentences returns a regexp object that detects punctuation marks
 func RegexSplitSentences() *regexp.Regexp {
-	return regexp.MustCompile(`[.,\/#!$%\^&\*;:{}=\-_~()]`)
+	return regexp.MustCompile(`[.,/#!$%^&*;:{}=\-_~()]`)
 }
 
-//RegexStopWords builds "stop-words" regex based on a slice of "stop-words"
+// RegexStopWords builds "stop-words" regex based on a slice of "stop-words"
 func RegexStopWords(stopWordsSlice []string) *regexp.Regexp {
-	stopWordRegexList := []string{}
+	stopWordRegexList := make([]string, 0)
 
 	for _, word := range stopWordsSlice {
 		wordRegex := fmt.Sprintf(`(?:\A|\z|\s)%s(?:\A|\z|\s)`, word)

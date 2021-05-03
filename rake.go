@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-//IsNumber returns true if the supplied string is a number
+// IsNumber returns true if the supplied string is a number
 func IsNumber(str string) bool {
 	if strings.Contains(str, ".") { //deal with float
 		if _, err := strconv.ParseFloat(str, 32); err != nil {
@@ -21,9 +21,9 @@ func IsNumber(str string) bool {
 	return true
 }
 
-// SeperateWords returns a slice of all words that have a length greater than a specified number of characters.
-func SeperateWords(text string) []string {
-	words := []string{}
+// SeparateWords returns a slice of all words that have a length greater than a specified number of characters.
+func SeparateWords(text string) []string {
+	words := make([]string, 0)
 
 	splitWords := RegexSplitWords().FindAllString(text, -1)
 	for _, singleword := range splitWords {
@@ -44,7 +44,7 @@ func SplitSentences(text string) []string {
 
 //GenerateCandidateKeywords returns a slice of candidate keywords from a slice of sentences and a stop-words regex
 func GenerateCandidateKeywords(sentenceList []string, stopWordPattern *regexp.Regexp) []string {
-	phraseList := []string{}
+	phraseList := make([]string, 0)
 
 	for _, sentence := range sentenceList {
 		tmp := stopWordPattern.ReplaceAllString(strings.TrimSpace(sentence), " | ")
@@ -77,7 +77,7 @@ func CalculateWordScores(phraseList []string) map[string]float64 {
 	wordDegree := map[string]int{}
 
 	for _, phrase := range phraseList {
-		wordList := SeperateWords(phrase)
+		wordList := SeparateWords(phrase)
 		wordListLength := len(wordList)
 		wordListDegree := wordListLength - 1
 
@@ -109,8 +109,8 @@ func GenerateCandidateKeywordScores(phraseList []string, wordScore map[string]fl
 
 	for _, phrase := range phraseList {
 		SetDefaultStringFloat64(keywordCandidates, phrase, 0)
-		wordList := SeperateWords(phrase)
-		candidateScore := float64(0.0)
+		wordList := SeparateWords(phrase)
+		candidateScore := 0.0
 
 		for _, word := range wordList {
 			candidateScore = candidateScore + wordScore[word]
