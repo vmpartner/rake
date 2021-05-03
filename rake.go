@@ -75,6 +75,7 @@ func GenerateCandidateKeywords(sentenceList []string, stopWordPattern *regexp.Re
 func CalculateWordScores(phraseList []string) map[string]float64 {
 	wordFrequency := map[string]int{}
 	wordDegree := map[string]int{}
+	stopWordPattern := RegexStopWords(StopWordsSlice)
 
 	for _, phrase := range phraseList {
 		wordList := SeparateWords(phrase)
@@ -82,6 +83,10 @@ func CalculateWordScores(phraseList []string) map[string]float64 {
 		wordListDegree := wordListLength - 1
 
 		for _, word := range wordList {
+			word = strings.TrimSpace(stopWordPattern.ReplaceAllString(strings.TrimSpace(word), ""))
+			if len(word) <= 0 {
+				continue
+			}
 			SetDefaultStringInt(wordFrequency, word, 0)
 			wordFrequency[word]++
 
@@ -162,9 +167,7 @@ func RunRakeI18N(text string, stopWords []string) PairList {
 	//Build word scores
 	wordScores := CalculateWordScores(phraseList)
 
-	//Build keyword candidates and sort it (see sort.go)
-	keywordCandidates := GenerateCandidateKeywordScores(phraseList, wordScores)
-	sorted := reverseSortByValue(keywordCandidates)
+	sorted := reverseSortByValue(wordScores)
 	return sorted
 }
 
